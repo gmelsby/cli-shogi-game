@@ -1,23 +1,28 @@
 # Author: Gregory Melsby
 # Date: 11/23/2021
-# Description: HasamiShogiGame class
+# Description: Contains classes HasamiShogiGame, Board, and Piece.
+# HasamiShogiGame models a game of Hasami Shogi and has a private data member board.
+# A Board has a list of lists which represents the board and has Pieces.
+# The play method of HasamiShogiGame lets the user play the game with inputs in algebraic notation.
 
 
 class HasamiShogiGame:
-    """Models a game of Hasami Shogi"""
+    """
+    Models a game of Hasami Shogi. Has private data members board, game state, and active player.
+    """
 
     def __init__(self):
-        """Creates a game of Hasami Shogi. """
+        """Creates a game of Hasami Shogi. First player defaults to 'BLACK'"""
         self._board = Board()
         self._game_state = 'UNFINISHED'
         self._active_player = 'BLACK'
 
     def get_game_state(self):
-        """Returns the current game state"""
+        """Returns a string of the current game state"""
         return self._game_state
 
     def get_active_player(self):
-        """Returns the current active player"""
+        """Returns a string of the current active player"""
         return self._active_player
 
     def get_num_captured_pieces(self, color):
@@ -27,8 +32,8 @@ class HasamiShogiGame:
     def make_move(self, square_from, square_to):
         """
         Attempts to move the piece at square_from to square_to.
-        If not possible returns false. If possible makes move, removes captured pieces,
-        and updates game state and turn.
+        If not possible returns False. If possible makes move, removes captured pieces,
+        and updates game state and turn. Then returns True.
         """
         if self._game_state != "UNFINISHED":
             return False
@@ -60,7 +65,7 @@ class HasamiShogiGame:
         self._board.display()
 
     def play(self):
-        """Plays the game until a player wins."""
+        """Sets up and plays the game until a player wins."""
         print("Welcome to my Hasami Shogi program!")
         print("Please enter moves in form '[origin square], [destination square]'.\n")
 
@@ -99,7 +104,10 @@ class HasamiShogiGame:
 
 
 class Board:
-    """Represents a Hasami Shogi board as a list of lists"""
+    """
+    Represents a Hasami Shogi board as a list of lists.
+    Has private data members grid (list of lists) and size (default size in 9)
+    """
 
     def __init__(self, size=9):
         """
@@ -146,7 +154,10 @@ class Board:
         return occupant.get_color()
 
     def is_legal_move(self, from_square, to_square, color):
-        """Returns True if move is legal, False if not"""
+        """
+        Takes in origin square, destination square, and moving player color.
+        Returns True if move is legal, False if not
+        """
         # makes sure inputted squares are at least length 2
         if len(from_square) < 2 or len(to_square) < 2:
             return False
@@ -182,8 +193,9 @@ class Board:
 
     def make_move(self, from_square, to_square, color):
         """
-        Attempts to make the requested move. Returns False if move is not legal.
-        If legal, moves the piece and removes any captured pieces. Returns true.
+        Attempts to make the requested move from from_square to to_square by the player of passed in color.
+        Returns False if move is not legal.
+        If legal, moves the piece and removes any captured pieces. Then returns True.
         """
         if not self.is_legal_move(from_square, to_square, color):
             return False
@@ -286,7 +298,7 @@ class Piece:
         self._color = color
 
     def get_color(self):
-        """Returns the color of the game piece"""
+        """Returns the string color of the game piece"""
         return self._color
 
 
