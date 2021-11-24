@@ -75,7 +75,7 @@ class Board:
 
     def get_num_captured_pieces(self, color):
         """Returns the number of captured pieces of the passed in color."""
-        result = 0
+        result = self._size
         for row in self._grid:
             result -= sum(square is not None and square.get_color() == color for square in row)
 
@@ -290,3 +290,5 @@ b.make_move('b2', 'i2', 'RED')
 b.display()
 b.make_move('i6', 'a6', 'BLACK')
 b.display()
+print(f'RED has captured {b.get_num_captured_pieces("BLACK")} pieces')
+print(f'BLACK has captured {b.get_num_captured_pieces("RED")} pieces')
