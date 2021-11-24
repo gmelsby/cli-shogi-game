@@ -38,6 +38,7 @@ class HasamiShogiGame:
 
         self.update_game_state()
         self.switch_active_player()
+        return True
 
     def update_game_state(self):
         """Checks if the active player has won the game. If so, updates the game state."""
@@ -87,13 +88,9 @@ class HasamiShogiGame:
                 except ValueError:
                     from_square, to_square = 'a0', 'a0'
 
-                legal_move = self._board.make_move(from_square, to_square, self._active_player)
+                legal_move = self.make_move(from_square, to_square)
                 if not legal_move:
                     print("Not a legal move, try again.")
-
-            self.update_game_state()
-            if self._game_state == 'UNFINISHED':
-                self.switch_active_player()
 
             print()
 
@@ -112,7 +109,7 @@ class Board:
         self._grid = []
         self._size = size
         self._grid.append([Piece('RED') for col in range(size)])
-        self._grid.extend([[None for col in range(9)] for row in range(size - 2)])
+        self._grid.extend([[None for col in range(size)] for row in range(size - 2)])
         self._grid.append([Piece('BLACK') for col in range(size)])
 
     def get_num_captured_pieces(self, color):
@@ -130,7 +127,7 @@ class Board:
         row = ord(square[0]) - 96
         # returns -1 for col if passed in value is not castable to int
         try:
-            col = int(square[1])
+            col = int(square[1:])
         except ValueError:
             col = -1
 
@@ -162,7 +159,7 @@ class Board:
         to_row, to_col = self.translate_square(to_square)
 
         # xor to make sure at least one but not both coordinates match
-        if not ((from_square[0] == to_square[0]) ^ (from_square[1] == to_square[1])):
+        if not ((from_row == to_row) ^ (from_col == to_col)):
             return False
 
         # move horizontally
