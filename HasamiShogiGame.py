@@ -58,6 +58,48 @@ class HasamiShogiGame:
         """Displays the current state of the board."""
         self._board.display()
 
+    def play(self):
+        """Plays the game until a player wins."""
+        print("Welcome to my Hasami Shogi program!")
+        print("Please enter moves in form '[origin square], [destination square]'.\n")
+
+        while self._game_state == 'UNFINISHED':
+
+            # displays the number of pieces each player has captured
+            for color, op_color in {"RED": "BLACK", "BLACK": "RED"}.items():
+                print(f'{color} has captured {self.get_num_captured_pieces(op_color)} opposing pieces.')
+
+            # displays the current player
+            print(f"It is {self._active_player}'s turn.\n")
+
+            # displays board
+            self._board.display()
+            print()
+
+            # prompts for a move until a legal move is entered
+            legal_move = False
+            while not legal_move:
+
+                move = input(f"{self._active_player}, enter your move: ")
+
+                try:
+                    from_square, to_square = move.split(", ")
+                except ValueError:
+                    from_square, to_square = 'a0', 'a0'
+
+                legal_move = self._board.make_move(from_square, to_square, self._active_player)
+                if not legal_move:
+                    print("Not a legal move, try again.")
+
+            self.update_game_state()
+            if self._game_state == 'UNFINISHED':
+                self.switch_active_player()
+
+            print()
+
+        self._board.display()
+        print(f"{self._game_state.split('_')[0]} wins!")
+
 
 class Board:
     """Represents a Hasami Shogi board as a list of lists"""
@@ -86,12 +128,20 @@ class Board:
         """Returns a tuple containing row, column as ints (index starts at 1)"""
         # converts the passed in letter to row number using ascii
         row = ord(square[0]) - 96
-        col = int(square[1])
+        # returns -1 for col if passed in value is not castable to int
+        try:
+            col = int(square[1])
+        except ValueError:
+            col = -1
+
         return row, col
 
     def get_square_occupant_color(self, square):
         """Returns the color of the piece occupying the square, returns 'NONE' if no piece"""
         row, col = self.translate_square(square)
+        if 0 >= row or row > self._size or 0 >= col or col > self._size:
+            return 'NONE'
+
         occupant = self._grid[row - 1][col - 1]
         if occupant is None:
             return 'NONE'
@@ -100,6 +150,10 @@ class Board:
 
     def is_legal_move(self, from_square, to_square, color):
         """Returns True if move is legal, False if not"""
+        # makes sure inputted squares are at least length 2
+        if len(from_square) < 2 or len(to_square) < 2:
+            return False
+
         # makes sure piece to be moved matches color passed in
         if color != self.get_square_occupant_color(from_square):
             return False
@@ -292,3 +346,6 @@ b.make_move('i6', 'a6', 'BLACK')
 b.display()
 print(f'RED has captured {b.get_num_captured_pieces("BLACK")} pieces')
 print(f'BLACK has captured {b.get_num_captured_pieces("RED")} pieces')
+
+g = HasamiShogiGame()
+g.play()
