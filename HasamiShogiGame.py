@@ -106,7 +106,7 @@ class HasamiShogiGame:
 class Board:
     """
     Represents a Hasami Shogi board as a list of lists.
-    Has private data members grid (list of lists) and size (default size in 9)
+    Has private data members grid (list of lists) and size (default size is 9)
     """
 
     def __init__(self, size=9):
@@ -169,11 +169,7 @@ class Board:
         from_row, from_col = self.translate_square(from_square)
         to_row, to_col = self.translate_square(to_square)
 
-        # xor to make sure at least one but not both coordinates match
-        if not ((from_row == to_row) ^ (from_col == to_col)):
-            return False
-
-        # move horizontally
+        # checks if the move is horizontal
         if from_row == to_row:
             direction = 1 if to_col > from_col else -1
             while to_col * direction > from_col * direction:
@@ -181,15 +177,19 @@ class Board:
                 if self._grid[from_row - 1][from_col - 1] is not None:
                     return False
 
-        # move vertically
-        else:
+            return True
+
+        # checks if the move is vertical
+        if from_col == to_col:
             direction = 1 if to_row > from_row else -1
             while to_row * direction > from_row * direction:
                 from_row += direction
                 if self._grid[from_row - 1][from_col - 1] is not None:
                     return False
 
-        return True
+            return True
+
+        return False
 
     def make_move(self, from_square, to_square, color):
         """
@@ -211,7 +211,7 @@ class Board:
         return True
 
     def remove_captures(self, square):
-        """Removes pieces captured by the piece on the passed in square"""
+        """Removes pieces captured by the piece on the passed in square string"""
         row, col = self.translate_square(square)
         piece = self._grid[row - 1][col - 1]
         if piece is None:
@@ -300,3 +300,6 @@ class Piece:
     def get_color(self):
         """Returns the string color of the game piece"""
         return self._color
+
+g = HasamiShogiGame()
+g.play()
