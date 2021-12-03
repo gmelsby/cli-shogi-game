@@ -305,6 +305,3 @@ class Piece:
     def get_color(self):
         """Returns the string color of the game piece"""
         return self._color
-
-g = HasamiShogiGame()
-g.play()
