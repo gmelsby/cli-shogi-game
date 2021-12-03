@@ -163,11 +163,16 @@ class Board:
             return False
 
         # makes sure piece to be moved matches color passed in
+        # if from_square out of bounds, get_square_occupant_color also returns "NONE"
         if color != self.get_square_occupant_color(from_square):
             return False
 
         from_row, from_col = self.translate_square(from_square)
         to_row, to_col = self.translate_square(to_square)
+
+        # makes sure destination is within bounds
+        if 0 >= to_row or to_row > self._size or 0 >= to_col or to_col > self._size:
+            return False
 
         # checks if the move is horizontal
         if from_row == to_row:
@@ -300,3 +305,6 @@ class Piece:
     def get_color(self):
         """Returns the string color of the game piece"""
         return self._color
+
+g = HasamiShogiGame()
+g.play()
