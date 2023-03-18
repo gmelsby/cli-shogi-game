@@ -26,3 +26,5 @@ In the terminal, navigate to the directory this repo is in and enter \
 or \
 `python3 PlayShogi.py` (MacOS, Linux) \
 to start a game.
+
+Black goes first. Enter in moves in the form of the example `i1, b1`.
