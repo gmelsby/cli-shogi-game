@@ -28,3 +28,4 @@ or \
 to start a game.
 
 Black goes first. Enter in moves in the form of the example `i1, b1`.
+The game will continue until victory is achieved by eliminating all but one of the opponent's pieces.
